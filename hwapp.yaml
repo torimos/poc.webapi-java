@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hwapp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+    - host: mk8s.local
+      http:
+        paths:
+          - path: /hwapp/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: hwapp
+                port:
+                  number: 80

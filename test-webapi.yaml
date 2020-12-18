@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp
+  name: test-webapi
   labels:
-    kapp: myapp
+    kapp: test-webapi
 spec:
   selector:
     matchLabels:
-      kapp: myapp
+      kapp: test-webapi
   replicas: 1
   template:
     metadata:
       labels:
-        kapp: myapp
+        kapp: test-webapi
     spec:
       containers:
-      - name: myapp
-        image: olytvynenko/myapp:latest
+      - name: test-webapi
+        image: olytvynenko/test-webapi:latest
         ports:
         - containerPort: 9090
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: myapp
+  name: test-webapi
   labels:
-    kapp: myapp
+    kapp: test-webapi
 spec:
   type: NodePort
   ports:
@@ -33,12 +33,12 @@ spec:
       port: 80
       targetPort: 9090
   selector:
-    kapp: myapp
+    kapp: test-webapi
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: myapp-ingress
+  name: test-webapi-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
@@ -46,10 +46,10 @@ spec:
     - host: mk8s.local
       http:
         paths:
-          - path: /myapp/(.*)
+          - path: /test-webapi/(.*)
             pathType: Prefix
             backend:
               service:
-                name: myapp
+                name: test-webapi
                 port:
                   number: 80
